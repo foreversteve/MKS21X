@@ -1,18 +1,105 @@
 package dev.java.wordsearch;
 
+import java.util.*;
+
+import javax.xml.crypto.Data;
+
+import java.io.*;
+
+
+
 public class WordSearch {
 	private char[][]data;
+	private char[][]solution;
+	private Random randgen;
+	private ArrayList<String>wordsToAdd;
+	private ArrayList<String>wordsAdded;
+	private int seed;
 
-    /**Initialize the grid to the size specified 
-     *fill all of the positions with '_'
-     *@param row is the starting height of the WordSearch
-     *@param col is the starting width of the WordSearch
-     */
+    
     public WordSearch(int rows,int cols){
+    		
+    		randgen = new Random();
+		wordsToAdd = new ArrayList<String>();
+		wordsAdded = new ArrayList<String>();
     		this.data = new char[rows][cols];
     		clear();
     }
+    	
+    public WordSearch(int rows, int cols, String fileName) {
+    		
+    		this(rows,cols);
+		
+    		clear();
+    		
+    		try{
+    		      File f = new File(fileName);//can combine
+    		      Scanner in = new Scanner(f);//into one line
+    		      
+    		        //NOW read the file here...
+    		      while(in.hasNext()){
+    		          String line = in.nextLine();
+    		          wordsToAdd.add(line.toUpperCase());
+    		}
 
+    		}catch(FileNotFoundException e){
+    		      System.out.println("File not found: " + fileName);
+    		      //e.printStackTrace();
+    		      System.exit(1);
+    		}
+    		
+    		seed = randgen.nextInt();
+    		randgen = new Random(seed);
+    		
+    		addAllWords();
+    		
+    		setSolution();
+    		
+    		fillEmpty();
+    		
+    }
+    
+    public WordSearch( int rows, int cols, String fileName, int randSeed) {
+    		this(rows,cols);
+    		
+    		clear();
+    		
+    		try{
+  		      File f = new File(fileName);//can combine
+  		      Scanner in = new Scanner(f);//into one line
+  		      
+  		        //NOW read the file here...
+  		      while(in.hasNext()){
+  		          String line = in.nextLine();
+  		          wordsToAdd.add(line);
+  		}
+
+  		}catch(FileNotFoundException e){
+  		      System.out.println("File not found: " + fileName);
+  		      //e.printStackTrace();
+  		      System.exit(1);
+  		}
+    		
+    		seed = randSeed;
+    		randgen = new Random(seed);
+    		
+    		addAllWords();
+    		
+    		setSolution();
+    		
+    		fillEmpty();
+    		
+    }
+    
+    public void setSolution() {
+    		solution = new char[data.length][data.length];
+    		for (int i = 0; i < data.length; i++) {
+			for (int k = 0; k < data.length; k++) {
+				solution[i][k] = data[i][k];
+			}
+		}
+    }
+    
     /**Set all values in the WordSearch to underscores'_'*/
     private void clear(){
     		for (int i = 0; i < data.length; i++) {
@@ -26,9 +113,12 @@ public class WordSearch {
      *@return a String with each character separated by spaces, and rows
      *separated by newlines.
      */
-    public String toString(){
+    public String toString(char[][] data){
     		String ans = "";
     		int l = data.length;
+    		if (l == 0) {
+    			return "[]";
+    		}
     		for (int i = 0; i < l; i++) {
 			for (int k = 0; k < l; k++) {
 				ans+= data[i][k];
@@ -41,101 +131,140 @@ public class WordSearch {
     		return ans;
     }
 
-
-    /**Attempts to add a given word to the specified position of the WordGrid.
-     *The word is added from left to right, must fit on the WordGrid, and must
-     *have a corresponding letter to match any letters that it overlaps.
-     *
-     *@param word is any text to be added to the word grid.
-     *@param row is the vertical locaiton of where you want the word to start.
-     *@param col is the horizontal location of where you want the word to start.
-     *@return true when the word is added successfully. When the word doesn't fit,
-     * or there are overlapping letters that do not match, then false is returned 
-     * and the board is NOT modified.
-     */
-    public boolean addWordHorizontal(String word,int row, int col){
+    private boolean addWord(int row, int col, String word, int rInc, int cInc) {
     		int l = word.length();
-    		if (row >= data.length || col >= data.length) {
-    			return false;
-    		}
-    		if (data.length >= col + l) {
-    			for (int i = 0; i < l; i++) {
-    				if (data[row][col+i] == '_') {
-    					data[row][col+i] = word.charAt(i);
-    				}
-    				else {
-    					if (data[row][col+i] != word.charAt(i)) {
-    						return false;
-    					}
-    				}
-    			}
-    			return true;
-    		}
-    		else if (col - l >= -1) {
-    			for (int i = 0; i < l; i++) {
-    				if (data[row][col-i] == '_') {
-    					data[row][col-i] = word.charAt(i);
-    				}
-    				else {
-    					if (data[row][col-i] != word.charAt(i)) {
-    						return false;
-    					}
-    				}
-    			}
-    			return true;
-    		}
-    		return false;
-    }
-
-   /**Attempts to add a given word to the specified position of the WordGrid.
-     *The word is added from top to bottom, must fit on the WordGrid, and must
-     *have a corresponding letter to match any letters that it overlaps.
-     *
-     *@param word is any text to be added to the word grid.
-     *@param row is the vertical locaiton of where you want the word to start.
-     *@param col is the horizontal location of where you want the word to start.
-     *@return true when the word is added successfully. When the word doesn't fit,
-     *or there are overlapping letters that do not match, then false is returned.
-     *and the board is NOT modified.
-     */
-    public boolean addWordVertical(String word,int row, int col){
-    		int l = word.length();
-    		if (row >= data.length || col >= data.length) {
-    			return false;
-    		}
-		if (data.length >= row + l) {
-			for (int i = 0; i < l; i++) {
-				if (data[row+i][col] == '_') {
-					data[row+i][col] = word.charAt(i);
-				}
-				else {
-					if (data[row+i][col] != word.charAt(i)) {
-						return false;
-					}
-				}
-			}
-			return true;
+		if (row > data.length || col > data.length) {
+			return false;
 		}
-		else if (col - l >= -1) {
-			for (int i = 0; i < l; i++) {
-				if (data[row-i][col] == '_') {
-					data[row-i][col] = word.charAt(i);
-				}
-				else {
-					if (data[row-i][col] != word.charAt(i)) {
-						return false;
+		if (col + l*rInc >= 0 && row + l * cInc >= 0) {
+			if (data.length >= col + l*rInc && data.length >= row + l*cInc)  {
+				for (int i = 0; i < l; i++) {
+					if (data[row+i*cInc][col+i*rInc] == '_') {
+						data[row+i*cInc][col+i*rInc] = word.charAt(i);
+					}
+					else {
+						if (data[row+i*cInc][col+i*rInc] != word.charAt(i)) {
+							return false;
+						}
 					}
 				}
+				wordsAdded.add(word);
+				wordsToAdd.remove(word);
+				return true;
 			}
-			return true;
 		}
 		return false;
     }
+    
+    public boolean addAllWords() {
+    		int a;
+    		int z = 0;
+    		int x,y;
+    		int r,c;
+    		if (data.length != 0) {	
+    			while (wordsToAdd.size() != 0 && z < 1000) {
+    				a = randgen.nextInt(wordsToAdd.size());
+    				x = randgen.nextInt(data.length);
+    				y = randgen.nextInt(data.length);
+    				
+    				r = randgen.nextInt()%2;
+    				c = randgen.nextInt()%2;
+    				
+    				while (r==0 && c ==0) {
+    					r = randgen.nextInt()%2;
+    					c = randgen.nextInt()%2;
+    				}
+    			
+    				addWord(x,y,wordsToAdd.get(wordsToAdd.size()-a-1), r, c);
+    				z++;
+    			}
+    		}
+    		return true;
+    }
+    
+    public String getData() {
+		return this.toString(data);
+	}
+
+	public String getSolution() {
+		return this.toString(solution);
+	}
+
+	public ArrayList<String> getWordsAdded() {
+		return wordsAdded;
+	}
+
+	public int getSeed() {
+		return seed;
+	}
+
+	private void fillEmpty() {
+    		for (int i = 0; i < data.length; i++) {
+			for (int k = 0; k < data.length; k++) {
+				if (data[i][k] == '_') {
+					data[i][k] = (char) (randgen.nextInt(26) + 65);
+				}
+			}
+		}
+    }
     public static void main(String[] args) {
-    		WordSearch a = new WordSearch(4,4);
-    		System.out.println(a);
-    		a.addWordHorizontal("hi", 1, 1);
-    		a.addWordVertical("hey", 1, 1);
-    		System.out.println(a);
+    		if (args.length == 5) {
+    			try {
+    				int x = Integer.parseInt(args[0]);
+    				int y = Integer.parseInt(args[1]);
+    				String f = args[2];
+    				int s = Integer.parseInt(args[3]);
+    				String k = args[4];
+    				
+    				WordSearch a = new WordSearch(x,y,f,s);
+    	    			System.out.println(a.getData());
+    	    			System.out.println(a.getWordsAdded());
+    	    			if (k.equals("key")) {
+    	    				System.out.println(a.getSolution());	
+    	    			}
+    			}
+    			catch (IllegalArgumentException e) {
+    				System.out.print("Try removing all terminal arguments to see the instruction");
+    			}
+    		}
+    		else if (args.length == 4) {
+    			try {
+    				int x = Integer.parseInt(args[0]);
+    				int y = Integer.parseInt(args[1]);
+    				String f = args[2];
+    				int s = Integer.parseInt(args[3]);
+    				
+    				WordSearch a = new WordSearch(x,y,f,s);
+    	    			System.out.println(a.getData());
+    	    			System.out.println(a.getWordsAdded());
+    	    			
+    			}
+    			catch (IllegalArgumentException e) {
+    				System.out.print("Try removing all terminal arguments to see the instruction");
+    			}
+    		}
+    		else if (args.length == 3) {
+    			try {
+    				int x = Integer.parseInt(args[0]);
+    				int y = Integer.parseInt(args[1]);
+    				String f = args[2];
+    				
+    				WordSearch a = new WordSearch(x,y,f);
+    	    			System.out.println(a.getData());
+    	    			System.out.println(a.getWordsAdded());
+    	    			System.out.println("The seed for this puzzle is :" + a.getSeed());
+    	    			
+    			}
+    			catch (IllegalArgumentException e) {
+    				System.out.print("Try removing all terminal arguments to see the instruction");
+    			}
+    		}
+    		else if (args.length == 0) {
+    			String instruction = "To initilize a wordSearch, insert parameters following the format: row cols filename randSeed answers";
+    			System.out.println(instruction);
+    		}
+    		else {
+    			System.out.println("Please do something sensible");
+    		}
     }
 }
