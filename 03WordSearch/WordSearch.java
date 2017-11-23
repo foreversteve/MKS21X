@@ -1,8 +1,5 @@
-package dev.java.wordsearch;
-
 import java.util.*;
 
-import javax.xml.crypto.Data;
 
 import java.io.*;
 
@@ -16,26 +13,26 @@ public class WordSearch {
 	private ArrayList<String>wordsAdded;
 	private int seed;
 
-    
+
     public WordSearch(int rows,int cols){
-    		
+
     		randgen = new Random();
 		wordsToAdd = new ArrayList<String>();
 		wordsAdded = new ArrayList<String>();
     		this.data = new char[rows][cols];
     		clear();
     }
-    	
+
     public WordSearch(int rows, int cols, String fileName) {
-    		
+
     		this(rows,cols);
-		
+
     		clear();
-    		
+
     		try{
     		      File f = new File(fileName);//can combine
     		      Scanner in = new Scanner(f);//into one line
-    		      
+
     		        //NOW read the file here...
     		      while(in.hasNext()){
     		          String line = in.nextLine();
@@ -47,27 +44,27 @@ public class WordSearch {
     		      //e.printStackTrace();
     		      System.exit(1);
     		}
-    		
+
     		seed = randgen.nextInt();
     		randgen = new Random(seed);
-    		
+
     		addAllWords();
-    		
+
     		setSolution();
-    		
+
     		fillEmpty();
-    		
+
     }
-    
+
     public WordSearch( int rows, int cols, String fileName, int randSeed) {
     		this(rows,cols);
-    		
+
     		clear();
-    		
+
     		try{
   		      File f = new File(fileName);//can combine
   		      Scanner in = new Scanner(f);//into one line
-  		      
+
   		        //NOW read the file here...
   		      while(in.hasNext()){
   		          String line = in.nextLine();
@@ -79,18 +76,18 @@ public class WordSearch {
   		      //e.printStackTrace();
   		      System.exit(1);
   		}
-    		
+
     		seed = randSeed;
     		randgen = new Random(seed);
-    		
+
     		addAllWords();
-    		
+
     		setSolution();
-    		
+
     		fillEmpty();
-    		
+
     }
-    
+
     public void setSolution() {
     		solution = new char[data.length][data.length];
     		for (int i = 0; i < data.length; i++) {
@@ -99,7 +96,7 @@ public class WordSearch {
 			}
 		}
     }
-    
+
     /**Set all values in the WordSearch to underscores'_'*/
     private void clear(){
     		for (int i = 0; i < data.length; i++) {
@@ -124,7 +121,7 @@ public class WordSearch {
 				ans+= data[i][k];
 				if (k != l-1) {
 					ans+= " ";
-				} 
+				}
 			}
 			ans+= "\n";
 		}
@@ -133,55 +130,55 @@ public class WordSearch {
 
     private boolean addWord(int row, int col, String word, int rInc, int cInc) {
     		int l = word.length();
-		if (row > data.length || col > data.length) {
-			return false;
-		}
-		if (col + l*rInc >= 0 && row + l * cInc >= 0) {
-			if (data.length >= col + l*rInc && data.length >= row + l*cInc)  {
-				for (int i = 0; i < l; i++) {
-					if (data[row+i*cInc][col+i*rInc] == '_') {
-						data[row+i*cInc][col+i*rInc] = word.charAt(i);
-					}
-					else {
-						if (data[row+i*cInc][col+i*rInc] != word.charAt(i)) {
-							return false;
-						}
-					}
+				if (row > data.length || col > data.length) {
+					return false;
 				}
+				if (col + l*rInc >= 0 && row + l * cInc >= 0) {
+					if (data.length >= col + l*rInc && data.length >= row + l*cInc)  {
+						for (int i = 0; i < l; i++){
+							if (data[row+i*cInc][col+i*rInc] != '_'){
+								if (data[row+i*cInc][col+i*rInc] != word.charAt(i)){
+									return false;
+								}
+							}
+						}
+						for (int i = 0; i < l; i++) {
+							data[row+i*cInc][col+i*rInc] = word.charAt(i);
+						}
 				wordsAdded.add(word);
 				wordsToAdd.remove(word);
 				return true;
+				}
 			}
-		}
-		return false;
+			return false;
     }
-    
+
     public boolean addAllWords() {
     		int a;
     		int z = 0;
     		int x,y;
     		int r,c;
-    		if (data.length != 0) {	
+    		if (data.length != 0) {
     			while (wordsToAdd.size() != 0 && z < 1000) {
     				a = randgen.nextInt(wordsToAdd.size());
     				x = randgen.nextInt(data.length);
     				y = randgen.nextInt(data.length);
-    				
+
     				r = randgen.nextInt()%2;
     				c = randgen.nextInt()%2;
-    				
+
     				while (r==0 && c ==0) {
     					r = randgen.nextInt()%2;
     					c = randgen.nextInt()%2;
     				}
-    			
+
     				addWord(x,y,wordsToAdd.get(wordsToAdd.size()-a-1), r, c);
     				z++;
     			}
     		}
     		return true;
     }
-    
+
     public String getData() {
 		return this.toString(data);
 	}
@@ -215,12 +212,12 @@ public class WordSearch {
     				String f = args[2];
     				int s = Integer.parseInt(args[3]);
     				String k = args[4];
-    				
+
     				WordSearch a = new WordSearch(x,y,f,s);
     	    			System.out.println(a.getData());
     	    			System.out.println(a.getWordsAdded());
     	    			if (k.equals("key")) {
-    	    				System.out.println(a.getSolution());	
+    	    				System.out.println(a.getSolution());
     	    			}
     			}
     			catch (IllegalArgumentException e) {
@@ -233,11 +230,11 @@ public class WordSearch {
     				int y = Integer.parseInt(args[1]);
     				String f = args[2];
     				int s = Integer.parseInt(args[3]);
-    				
+
     				WordSearch a = new WordSearch(x,y,f,s);
     	    			System.out.println(a.getData());
     	    			System.out.println(a.getWordsAdded());
-    	    			
+
     			}
     			catch (IllegalArgumentException e) {
     				System.out.print("Try removing all terminal arguments to see the instruction");
@@ -248,12 +245,12 @@ public class WordSearch {
     				int x = Integer.parseInt(args[0]);
     				int y = Integer.parseInt(args[1]);
     				String f = args[2];
-    				
+
     				WordSearch a = new WordSearch(x,y,f);
     	    			System.out.println(a.getData());
     	    			System.out.println(a.getWordsAdded());
     	    			System.out.println("The seed for this puzzle is :" + a.getSeed());
-    	    			
+
     			}
     			catch (IllegalArgumentException e) {
     				System.out.print("Try removing all terminal arguments to see the instruction");
