@@ -1,3 +1,5 @@
+package ArrayMethod;
+
 public class OrderedSuperArray extends SuperArray {
 	
     public OrderedSuperArray(int capacity){
@@ -13,7 +15,7 @@ public class OrderedSuperArray extends SuperArray {
     			add(input[i]);
     		}
     }
-    public void set(int index, String element) {
+    public String set(int index, String element) {
     		throw new UnsupportedOperationException();
     }
     
@@ -93,8 +95,10 @@ public class OrderedSuperArray extends SuperArray {
 		}
 		return start;
     }
-    public void add(int index, String element) {
+    
+    public String add(int index, String element) {
     		add(element);
+    		return "";
     }
     
     public boolean add(String value){

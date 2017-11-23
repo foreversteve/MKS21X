@@ -1,210 +1,144 @@
+package ArrayMethod;
+
 public class SuperArray{
-    private String[] data;
-    private int size;
-    private int length;
+    String[] arr;
+    int arrSize= 0;
     
-    public SuperArray() {
-    		this.size = 0;
-    		this.length = 10;
-    		data = new String[10];
+    public SuperArray(){
+    		arr = new String[10];
     }
-    public SuperArray(int length){
-    		this.length = length;
-    		data = new String[length];
-    		this.size = 0;
-    }
-   
-    public SuperArray(String[] input){
-		this.size = input.length;
-		data = input;
-		this.length = size;
-    }
-    
-    public void changeData(String[] elements) {
-    		data = elements;
-    		this.size = elements.length;
+    public SuperArray(int capacity) {
+    		arr = new String[capacity];
     }
     public void clear(){
-    		for (int i = 0; i < size; i++){
-	    data[i] = null;
-    		}
-    		size = 0;
+    	arr = new String[10];
+    	arrSize = 0;
     }
-    public int getLength() {
-    		return length;
+    
+    private String printError(){
+    	return "Error";
     }
     public int getSize() {
-    		return size;
+    		return arrSize;
     }
-    
-    public boolean isEmpty() {
-    		for (String x:data) {
-    			if (x != null) {
-    				return false;
-    			}
-    		}
-    		return true;
+    public int size(){
+    	return arrSize;
     }
-    
-    public String get(int index) {
-    		return data[index];
+    public boolean IsEmpty(){
+        return (arrSize == 0); 
+    }                 
+    public boolean add(String element){
+	  	if (arrSize == arr.length){
+		    resize();
+	  	}
+	  	arr[arrSize] = element;
+	  	arrSize += 1;
+	  	return true;
     }
-    
-    public void set(int index, String element) {
-    		data[index] = element;
+    public String get(int index){
+    	if (index < 0 || index > size()){
+    		return printError();
+    	}
+    	return arr[index];
     }
-    
+    public String set(int index, String element){
+    	if (index < 0 || index > size()){
+    		return printError();
+    	}
+    	String tmp = arr[index];
+    	arr[index] = element;
+    	return tmp;
+    }
     public String toString(){
-    		String ans = "[";
-    		for (int i = 0; i < data.length; i++){
-    			if (i == data.length-1) {
-    				ans+= data[i];
-    			}
-    			else {
-    				ans+=data[i]+", ";
-    			}
-    		}
-    		return ans + "]";
-    }
-    
-    public boolean contains(String element) {
-    		for (String x:data) {
-    			if (x.equals(element)) {
-    				return true;
-    			}
-    		}
-    		return false;
-    }
-    
-    public int indexOf(String element) {
-    		for (int i = 0; i<data.length; i++) {
-    			if (data[i].equals(element)) {
-    				return i;
-    			}
-    		}
-    		return -1;
-    }
-    
-    public int lastIndexOf(String element) {
-    		for (int i = data.length-1; i>0; i--) {
-			if (data[i].equals(element)) {
-				return i;
+    	String  returnString = "[";
+		for (int i = 0; i < arrSize; i++){
+		    returnString += arr[i];
+			if (i != arrSize-1){
+			    returnString += ", ";
 			}
 		}
-		return -1;
+		returnString += "]";
+	        return returnString;
     }
-    
-    public boolean remove(String element){
-    		int index = indexOf(element);
-    		if (index == -1) return false;
-    		for (int i = index; i < size-1; i++){
-			data[i]=data[i+1];
-    		}
-    		set(data.length-1,null);
-    		size--;
-    		resize(data.length-1);
-		return true;
+
+    public boolean contains(String element){
+		for (int i = 0; i < arrSize; i ++){
+		    if (arr[i].equals(element)){
+		    	return true;
+		    }
+		}
+		return false;
     }
-    
-    public String remove(int index) {
-    		if (data.length < index) {
-    			return "Dumb Ass User Alert";
+    private void resize(){
+	String[] tmp = new String[arrSize * 2];
+		for (int i = 0; i < arr.length; i++){
+		    tmp[i] =  arr[i];
+		}
+		arr = tmp;
+		//System.out.println(arr.length);
+    }
+    public String add(int index, String element){
+    	if (index < 0 || index > size()){
+    		return printError();
+    	}
+    	if (arrSize == arr.length){
+		    resize();
+		}
+		String[] tmpArr = new String[arr.length];
+		for (int i = 0; i < index; i++){
+			tmpArr[i] = arr[i];
+		}
+		
+		for (int i = index; i < arrSize; i ++){
+		    tmpArr [i+1] = arr[i];
+		}
+		tmpArr[index] = element;
+		arr = tmpArr;
+		arrSize += 1;
+		return "";
+    }
+    public int indexOf(String element){
+    	for (int i = 0; i < arrSize; i ++){
+    		if (arr[i].equals(element)){
+    			return i;
     		}
-    		String removed = data[index];
-    		for (int i = index; i < size-1; i++){
-			data[i]=data[i+1];
+    	}
+    	return -1;
+    }
+    public int lastIndexOf(String element){
+    	int lastOccur = -1;
+    	for (int i = 0; i < arrSize; i ++){
+    		if (arr[i].equals(element)){
+    			lastOccur = i;
     		}
-    		set(data.length-1,null);
-    		size--;
-    		resize(data.length-1);
+    	}
+    	return lastOccur;
+    }
+    public String remove(int index){
+    	if (index < 0 || index > size()){
+    		return printError();
+    	}
+    	String removed = arr[index];
+    	String[] tmpArr = new String[arrSize];
+		for (int i = 0; i < index; i++){
+			tmpArr[i] = arr[i];
+		}
+		
+		for (int i = index; i <= arrSize-2; i ++){
+		    tmpArr [i] = arr[i+1];
+		}
+		arr = tmpArr;
+		arrSize -= 1;
 		return removed;
     }
-    public boolean add(String s) {
-    		if (size == data.length) {
-			resize(data.length + 1);
-		}
-    		data[size]=s;
-    		size++;
+    public boolean remove(String element){
+    	if (indexOf(element) != -1){
+    		remove(indexOf(element));
     		return true;
-    }
-    public void add(int index,String s){
-    		if (size == data.length) {
-    			resize(data.length + 1);
-    		}
-    		for (int i = data.length-2; i >= index; i--){
-    			data[i+1]=data[i];
-    		}
-    		data[index]=s;
-    		size ++;
     	}
-    
-    public void resize(int a){
-    		String[] x = new String[a];
-    		if (a >=  size){
-    			for (int i = 0; i < size; i++){
-    				x[i] = data[i];
-    			}
-    			data = x;
-    			length = a;
-    		}
+    	return false;
     }
-    
-    public static void main(String[]args){
-    		String[] lol = {"Hello","NiHao","Hola","Annyeonghaseyo","Kon'nichiwa"};
-    		SuperArray a = new SuperArray(lol);
-    		
-    		System.out.println(a.isEmpty());
-    		System.out.println(a);
-    		
-    		// Check Getters
-    		a.resize(5);
-    		System.out.println(a.getSize());
-    		System.out.println(a.getLength());
 
-    		//Check getIndex
-    		System.out.println(a.get(2));
-    		
-    		//Check set method
-    		a.set(4, "hello");
-    		System.out.println(a);
-    		
-    		//Undo the previous method for further testing
-    		a.set(4,"Kon'nichiwa");
-    		
-    		//Check add
-    		a.add(2,"Bye");
-    		System.out.println(a);
-    		System.out.println(a.getSize());
-    	
-    		//Check Resize
-    		a.resize(15);
-    		System.out.println(a);
-    		
-    		//Check Clear & isEmpty
-    		a.clear();
-        System.out.println(a);
-        System.out.println(a.isEmpty());
-        
-        a.resize(10);
-        a.changeData(lol); //Helper Function To Change the Data (Back to original in this case)
-        
-        //Check IndexOf & LastIndexOf
-        System.out.println(a.indexOf("Hello"));
-        a.add(5,"Hello");
-        System.out.println(a.lastIndexOf("Hello"));
-        System.out.println(a);
-        
-        //Check Remove(String)
-        a.remove("Hello");
-        System.out.println(a);
-        
-        //Check Remove(Index)
-        System.out.println(a.remove(1));
-        System.out.println(a);
-        
-        //Check Contains
-        System.out.println(a.contains("hello"));
-        System.out.println(a);
-    }
-	
+
 }
+

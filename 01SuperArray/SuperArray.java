@@ -1,57 +1,144 @@
+package ArrayMethod;
+
 public class SuperArray{
-    private String[] data;
-    private int size;
-    private int DEFAULT_SIZE = 10;
-    public SuperArray(int size){
-	this.size = size;
-	data = new String[DEFAULT_SIZE];
+    String[] arr;
+    int arrSize= 0;
+    
+    public SuperArray(){
+    		arr = new String[10];
+    }
+    public SuperArray(int capacity) {
+    		arr = new String[capacity];
     }
     public void clear(){
-	for (int i = 0; i < size; i++){
-	    data[i] = "0";
-	}
+    	arr = new String[10];
+    	arrSize = 0;
+    }
+    
+    private String printError(){
+    	return "Error";
+    }
+    public int getSize() {
+    		return arrSize;
+    }
+    public int size(){
+    	return arrSize;
+    }
+    public boolean IsEmpty(){
+        return (arrSize == 0); 
+    }                 
+    public boolean add(String element){
+	  	if (arrSize == arr.length){
+		    resize();
+	  	}
+	  	arr[arrSize] = element;
+	  	arrSize += 1;
+	  	return true;
+    }
+    public String get(int index){
+    	if (index < 0 || index > size()){
+    		return printError();
+    	}
+    	return arr[index];
+    }
+    public String set(int index, String element){
+    	if (index < 0 || index > size()){
+    		return printError();
+    	}
+    	String tmp = arr[index];
+    	arr[index] = element;
+    	return tmp;
     }
     public String toString(){
-	String ans = "";
-	for (int i = 0; i < data.length; i++){
-	    ans+=data[i]+" ";
-	}
-	return ans;
+    	String  returnString = "[";
+		for (int i = 0; i < arrSize; i++){
+		    returnString += arr[i];
+			if (i != arrSize-1){
+			    returnString += ", ";
+			}
+		}
+		returnString += "]";
+	        return returnString;
     }
-    public void addString(int index,String s){
-	for (int i = index+1; i < size; i++){
-	    data[i]=data[i-1];
-	}
-	data[index]=s;
-	this.size ++;
+
+    public boolean contains(String element){
+		for (int i = 0; i < arrSize; i ++){
+		    if (arr[i].equals(element)){
+		    	return true;
+		    }
+		}
+		return false;
     }
-    public void resize(int a){
-	String[] x = new String[a];
-	if (a >=  data.length){
-	    for (int i = 0; i < data.length; i++){
-		x[i] = data[i];
-	    }
-	}
-	data = x;
+    private void resize(){
+	String[] tmp = new String[arrSize * 2];
+		for (int i = 0; i < arr.length; i++){
+		    tmp[i] =  arr[i];
+		}
+		arr = tmp;
+		//System.out.println(arr.length);
     }
-    public static void main(String[]args){
-	SuperArray a = new SuperArray(4);
-	for (int i = 0; i<4; i++){
-	    if (i%2 == 0){
-		a.data[i] = "hi";
-	    }
-	    else{
-		a.data[i]="hello";
-	    }
-	}
-	System.out.println(a);
-	a.addString(2,"YEAH");
-	System.out.println(a);
-        a.clear();
-	System.out.println(a);
-	a.resize(15);
-	System.out.println(a);
-	
+    public String add(int index, String element){
+    	if (index < 0 || index > size()){
+    		return printError();
+    	}
+    	if (arrSize == arr.length){
+		    resize();
+		}
+		String[] tmpArr = new String[arr.length];
+		for (int i = 0; i < index; i++){
+			tmpArr[i] = arr[i];
+		}
+		
+		for (int i = index; i < arrSize; i ++){
+		    tmpArr [i+1] = arr[i];
+		}
+		tmpArr[index] = element;
+		arr = tmpArr;
+		arrSize += 1;
+		return "";
     }
-	
+    public int indexOf(String element){
+    	for (int i = 0; i < arrSize; i ++){
+    		if (arr[i].equals(element)){
+    			return i;
+    		}
+    	}
+    	return -1;
+    }
+    public int lastIndexOf(String element){
+    	int lastOccur = -1;
+    	for (int i = 0; i < arrSize; i ++){
+    		if (arr[i].equals(element)){
+    			lastOccur = i;
+    		}
+    	}
+    	return lastOccur;
+    }
+    public String remove(int index){
+    	if (index < 0 || index > size()){
+    		return printError();
+    	}
+    	String removed = arr[index];
+    	String[] tmpArr = new String[arrSize];
+		for (int i = 0; i < index; i++){
+			tmpArr[i] = arr[i];
+		}
+		
+		for (int i = index; i <= arrSize-2; i ++){
+		    tmpArr [i] = arr[i+1];
+		}
+		arr = tmpArr;
+		arrSize -= 1;
+		return removed;
+    }
+    public boolean remove(String element){
+    	if (indexOf(element) != -1){
+    		remove(indexOf(element));
+    		return true;
+    	}
+    	return false;
+    }
+
+
 }
+
