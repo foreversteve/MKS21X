@@ -53,10 +53,33 @@ public class Sort {
 		}
 	}
 
+	// Bogo Sort
+	public static boolean isSorted(int[] ary){
+		for (int i = 0; i < ary.length-1; i++){
+			if (ary[i]>ary[i+1]){
+				return false;
+			}
+		}
+		return true;
+	}
+	public static void bogoSort(int[] ary){
+        while(!isSorted(ary)){
+            for(int i = 0 ; i < ary.length; i++){
+                int temp = ary[i];
+                int newSpot = (int)(Math.random()*ary.length);
+                ary[i] = ary[newSpot];
+                ary[newSpot] = temp;
+            }
+        }
+    }
+
 	public static void main(String args[]) {
 		//3,2,10,-134,3190,134,1,-3,1203
 		int[] testcase = {3,2,10,-134,3190,134,1,-3,1203};
 		Sort.selectionSort(testcase);
 		System.out.println(Arrays.toString(testcase));
+		int[] test = {3,2,10,-134,3190,134,1,-3,1203};
+		Sort.bogoSort(test);
+		System.out.println(Arrays.toString(test));
 	}
 }
