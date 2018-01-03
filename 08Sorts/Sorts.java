@@ -1,8 +1,7 @@
 
-
 import java.util.*;
 
-public class Sort {
+public class Sorts {
 
 	public static String name(){
 	    return "09.Liu.Steven";
@@ -105,7 +104,7 @@ public class Sort {
 		if (endMarker <= 0) {
 			return;
 		}
-		while (Sort.swaps(ary,endMarker) != 0) {
+		while (Sorts.swaps(ary,endMarker) != 0) {
 			endMarker--;
 		}
 	}
@@ -128,7 +127,7 @@ public class Sort {
 	   }
 	   int counter = 0;
 	   int[] ans = new int[args.length];
-	   int[] range = new int[Sort.findMax(args)+1];
+	   int[] range = new int[Sorts.findMax(args)+1];
 	   for (int i = 0; i < args.length; i++){
 	     range[args[i]]+=1;
 	   }
@@ -155,21 +154,21 @@ public class Sort {
 	public static void main(String args[]) {
 		//selection sort
 		int[] testcase = {3,2,10,-134,3190,134,1,-3,1203};
-		Sort.selectionSort(testcase);
+		Sorts.selectionSort(testcase);
 		System.out.println(Arrays.toString(testcase));
 
 		System.out.println();
 
 		//bogo Sort
 		int[] test = {3,2,10,-134,3190,134,1,-3,1203};
-		Sort.bogoSort(test);
+		Sorts.bogoSort(test);
 		System.out.println(Arrays.toString(test));
 
 		System.out.println();
 
 		//Bubble Sort
 		int[] quiz = {3,2,10,-134,3190,134,1,-3,1203};
-		Sort.bubbleSort(quiz);
+		Sorts.bubbleSort(quiz);
 		System.out.println(Arrays.toString(quiz));
 
 		//Bucket Sort
@@ -177,9 +176,9 @@ public class Sort {
 	    for (int i = 0; i < testcase.length; i++){
 	      testcase[i] = (int)(Math.random()*100);
 	    }
-	    System.out.println(Sort.findMax(testcase));
+	    System.out.println(Sorts.findMax(testcase));
 	    System.out.println(Arrays.toString(testcase));
-	    System.out.println(Arrays.toString(Sort.bucketSort(testcase)));
+	    System.out.println(Arrays.toString(Sorts.bucketSort(testcase)));
 
 	}
 }
