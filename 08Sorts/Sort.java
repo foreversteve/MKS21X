@@ -5,7 +5,7 @@ import java.util.*;
 public class Sort {
 
 	public static String name(){
-	    return "09.Liu.Steven(Haoxuan)";
+	    return "09.Liu.Steven";
 	}
 
 	//Selection Sort

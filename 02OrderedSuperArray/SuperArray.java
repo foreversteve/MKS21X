@@ -1,4 +1,4 @@
-package ArrayMethod;
+
 
 public class SuperArray{
     String[] arr;
