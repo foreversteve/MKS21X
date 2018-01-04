@@ -19,6 +19,11 @@ public class Barcode implements Comparable<Barcode>{
 		if (zip.length() != 5) {
 			throw new IllegalArgumentException();
 		}
+		for (int i = 0; i<zip.length(); i++) {
+			if (zip.length() != 5 || !zip.matches("[0-9]+")){
+				throw new IllegalArgumentException();
+			}
+		}
     		String tempBar = "";
     		int var = 0;
     		int var2 = 0;
@@ -40,6 +45,7 @@ public class Barcode implements Comparable<Barcode>{
 		if (code.length() != 32 || ! (code.substring(0, 1).equals("|")) || !(code.substring(31,32).equals("|"))){
 			throw new IllegalArgumentException();
 		}
+
 		for (int i = 1; i < code.length()-5; i+= 5) {
 			String val = code.substring(i,i+5);
 			int index = Barcode.check(Barcode.key,val);
@@ -51,7 +57,7 @@ public class Barcode implements Comparable<Barcode>{
 		if (! checkSum(ans)) {
 			throw new IllegalArgumentException();
 		}
-		return ans;
+		return ans.substring(0,ans.length()-1);
 
 	}
 
@@ -89,6 +95,7 @@ public class Barcode implements Comparable<Barcode>{
 	}
 
     public static void main(String args[]) {
+
     		Barcode y = new Barcode("11133");
     		Barcode x = new Barcode("11111");
 
@@ -103,21 +110,23 @@ public class Barcode implements Comparable<Barcode>{
     		System.out.println(Barcode.toZip("|:::||:::||:::||::||:::||:|:|::|"));
     		System.out.println(Barcode.toCode("11133"));
 
-		System.out.println("Test starts here");
-	      	//Barcode e = new Barcode("asdfd"); //Contains non-barcode characters, should throw IllegalArgumentException
+		//System.out.println("Test starts here");
+	    /*Barcode e = new Barcode("asdfd"); //Contains non-barcode characters, should throw IllegalArgumentException
 		//Barcode f = new Barcode("1234"); //Invalid length, should throw IllegalArgumentException
 
-		System.out.println(Barcode.toCode("00294")); // |||:::||:::::|:||:|:::|::|:|:|:|
+		//System.out.println(Barcode.toCode("00294")); // |||:::||:::::|:||:|:::|::|:|:|:|
 		//System.out.println(Barcode.toCode("asdfd")); //Contains non-barcode characters, should throw IllegalArgumentException
 		//System.out.println(Barcode.toCode("1234")); //Invalid length, should throw IllegalArgumentException
 
-		System.out.println(Barcode.toZip("|||:::||:::::|:||:|:::|::|:|:|:|")); //Should return 00294
-		System.out.println(Barcode.toZip("|:::||:::||::|:|:|::|:|:|:::||:")); //Invalid length, should throw IllegalArgumentException
-		System.out.println(Barcode.toZip("|:::||:::||::|:|:|::|:|:|:::||||")); //Incorrect checksum, should throw IllegalArgumentException
-		System.out.println(Barcode.toZip("|a::||:::||::|:|:|::|:|:|:::||:|")); //Contains non-barcode characters, should throw IllegalArgumentException
-		System.out.println(Barcode.toZip("::::||:::||::|:|:|::|:|:|:::||:|")); //First character is not '|', should throw IllegalArgumentException
-		System.out.println(Barcode.toZip("|:::||:::||::|:|:|::|:|:|:::||::")); //Last character is not '|', should throw IllegalArgumentException
+		//System.out.println(Barcode.toZip("|||:::||:::::|:||:|:::|::|:|:|:|")); //Should return 00294
+		//System.out.println(Barcode.toZip("|:::||:::||::|:|:|::|:|:|:::||:")); //Invalid length, should throw IllegalArgumentException
+		//System.out.println(Barcode.toZip("|:::||:::||::|:|:|::|:|:|:::||||")); //Incorrect checksum, should throw IllegalArgumentException
+		//System.out.println(Barcode.toZip("|a::||:::||::|:|:|::|:|:|:::||:|")); //Contains non-barcode characters, should throw IllegalArgumentException
+		//System.out.println(Barcode.toZip("::::||:::||::|:|:|::|:|:|:::||:|")); //First character is not '|', should throw IllegalArgumentException
+		//System.out.println(Barcode.toZip("|:::||:::||::|:|:|::|:|:|:::||::")); //Last character is not '|', should throw IllegalArgumentException
 		System.out.println(Barcode.toZip("|::::::::||::|:|:|::|:|:|:::||:|")); //Invalid character sequence, should throw IllegalArgumentException
+  		*/
     }
+
 
 }
