@@ -1,9 +1,8 @@
 public class Book{
-    private String Author,Title;
-    private int ISBN;
+    private String Author,Title,ISBN;
     public Book(){
     }
-    public Book(String author, String title, int ISBN){
+    public Book(String author, String title, String ISBN){
 	this.Author = author;
 	this.Title = title;
 	this.ISBN = ISBN;
@@ -14,7 +13,7 @@ public class Book{
     public String getTitle(){
 	return Title;
     }
-    public int getISBN(){
+    public String getISBN(){
 	return ISBN;
     }
     public String toString(){
@@ -23,8 +22,7 @@ public class Book{
 	return ans;
     }
     public static void main(String[] args){
-	Book a = new Book("Steven", "How To Java", 1092);
+	Book a = new Book("Steven", "How To Java", "1092");
 	System.out.println(a);
     }
 }
-    
