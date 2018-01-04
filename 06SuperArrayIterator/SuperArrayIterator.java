@@ -1,12 +1,11 @@
-
 import java.util.Iterator;
 
-	public class SuperArrayIterator implements Iterator{
+	public class SuperArrayIterator implements Iterator<String>{
 			int current,stop;
 			SuperArray SuperArrayy;
-			public SuperArrayIterator(int start,int end,SuperArray a) {
+			public SuperArrayIterator(int start,SuperArray a) {
 				current = start;
-				stop = end;
+				stop = a.getSize()-1;
 				SuperArrayy = a;
 			}
 			public void remove(){
@@ -21,7 +20,6 @@ import java.util.Iterator;
 
 				return SuperArrayy.get(current-1);
 			}
-
 			public boolean hasNext(){
 				return current <= stop;
 			}

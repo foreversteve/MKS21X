@@ -1,4 +1,3 @@
-
 import java.util.*;
 public class SuperArray implements Iterable<String>{
     private String[] arr;
@@ -36,6 +35,7 @@ public class SuperArray implements Iterable<String>{
 	  	}
 	  	arr[arrSize] = element;
 	  	arrSize += 1;
+	  	end = arrSize;
 	  	return true;
     }
     public String get(int index){
@@ -45,15 +45,15 @@ public class SuperArray implements Iterable<String>{
     	return arr[index];
     }
     public String set(int index, String element){
-    	if (index < 0 || index > size()){
-    		return printError();
-    	}
-    	String tmp = arr[index];
-    	arr[index] = element;
-    	return tmp;
+    		if (index < 0 || index > size()){
+    			return printError();
+    		}
+    		String tmp = arr[index];
+    		arr[index] = element;
+    		return tmp;
     }
     public String toString(){
-    	String  returnString = "[";
+    		String  returnString = "[";
 		for (int i = 0; i < arrSize; i++){
 		    returnString += arr[i];
 			if (i != arrSize-1){
@@ -98,6 +98,7 @@ public class SuperArray implements Iterable<String>{
 		tmpArr[index] = element;
 		arr = tmpArr;
 		arrSize += 1;
+		end = arrSize;
 		return "";
     }
     public int indexOf(String element){
@@ -131,7 +132,7 @@ public class SuperArray implements Iterable<String>{
 		    tmpArr [i] = arr[i+1];
 		}
 		arr = tmpArr;
-		arrSize -= 1;
+		arrSize += 1;
 		return removed;
     }
     public boolean remove(String element){
@@ -144,7 +145,7 @@ public class SuperArray implements Iterable<String>{
 
 
     public Iterator<String> iterator(){
-    		return new SuperArrayIterator(start,end,this);
+    		return new SuperArrayIterator(start,this);
     }
 
 
@@ -167,6 +168,7 @@ public class SuperArray implements Iterable<String>{
         for(String s : data){
           System.out.print(s+" ");
         }
+
       }
 
 }
